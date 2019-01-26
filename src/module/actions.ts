@@ -410,24 +410,24 @@ export default function (Firebase: any): AnyObject {
               if (state._conf.sync.preventInitialDocInsertion) return reject('preventInitialDocInsertion')
               if (state._conf.logging) console.log('[vuex-easy-firestore] inserting initial doc')
               dispatch('insertInitialDoc')
-              return resolve()
+              return resolve(querySnapshot)
             }
             if (source === 'local') return resolve()
             const id = getters.docModeId
             const doc = getters.cleanUpRetrievedDoc(querySnapshot.data(), id)
             dispatch('applyHooksAndUpdateState', {change: 'modified', id, doc})
-            return resolve()
+            return resolve(querySnapshot)
           }
           // 'collection' mode:
           querySnapshot.docChanges().forEach(change => {
             const changeType = change.type
             // Don't do anything for local modifications & removals
-            if (source === 'local') return resolve()
+            if (source === 'local') return resolve(querySnapshot)
             const id = change.doc.id
             const doc = getters.cleanUpRetrievedDoc(change.doc.data(), id)
             dispatch('applyHooksAndUpdateState', {change: changeType, id, doc})
           })
-          return resolve()
+          return resolve(querySnapshot)
         }, error => {
           state._sync.patching = 'error'
           return reject(error)

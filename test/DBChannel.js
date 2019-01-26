@@ -49,11 +49,17 @@ test('[openDBChannel] check where filter after openDBChannel', async t => {
   // 'charlie' is replaced by 'null' because there is no actual authenticated user in this test
   t.deepEqual(res, [['hi.null.docs.Luca', '==', '{big}']])
   // 2. open again
-  store.dispatch('mainCharacter/openDBChannel', {name: 'Mesqueeb'}).catch(console.error)
+  store.dispatch('mainCharacter/openDBChannel', {name: 'Mesqueeb'}).catch(console.error);
   await wait(2)
   res = store.getters['mainCharacter/getWhereArrays']()
   t.deepEqual(char._sync.pathVariables, {name: 'Mesqueeb'})
   t.deepEqual(res, [['hi.null.docs.Mesqueeb', '==', '{big}']])
+})
+
+test('[openDBChannel] should resolve with a querySnapshot', async t => {
+  const querySnapshot = await store.dispatch('mainCharacter/openDBChannel', {name: 'Luca'});
+  const data = querySnapshot.data();
+  t.deepEqual(typeof querySnapshot.data, '==', 'function')
 })
 
 // test('sync: where', async t => {

@@ -24,7 +24,11 @@ Both with _realtime updates_ and with _fetching docs_ you can use `where` filter
 If you want to use _realtime updates_ the only thing you need to do is to dispatch the `openDBChannel` action. Eg.
 
 ```js
-dispatch('moduleName/openDBChannel').catch(console.error)
+dispatch('moduleName/openDBChannel')
+  .then(querySnapshot => {
+    // react to data changes in realtime
+  })
+  .catch(console.error)
 ```
 
 `openDBChannel` is just the same as the Firestore [onSnapshot](https://firebase.google.com/docs/firestore/query-data/listen) function, but the difference is that the documents from Firestore are automatically added to Vuex: in the module defined as `moduleName` and inside the object defined as `statePropName` as per your config (see [setup](setup.html#setup)).
